@@ -186,6 +186,8 @@ public:
   void unpack(const velodyne_msgs::VelodynePacket& pkt, DataContainerBase& data,
               const ros::Time& scan_start_time);
 
+  std::tuple<float, float, float> unpackOffline(const velodyne_msgs::VelodynePacket& pkt, const ros::Time& scan_start_time);
+
   void setParameters(double min_range, double max_range, double view_direction, double view_width);
 
   int scansPerPacket() const;
