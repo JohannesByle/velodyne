@@ -36,7 +36,7 @@
 #include <geometry_msgs/TransformStamped.h>
 #include <velodyne_msgs/VelodyneScan.h>
 #include <sensor_msgs/point_cloud2_iterator.h>
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 #include <memory>
 #include <string>
 #include <algorithm>
