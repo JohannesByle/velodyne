@@ -642,28 +642,16 @@ namespace velodyne_rawdata {
                     intensity = (intensity < min_intensity) ? min_intensity : intensity;
                     intensity = (intensity > max_intensity) ? max_intensity : intensity;
 
-//                    std::cout << "set x\n";
                     *iter_x = x_coord;
-//                    std::cout << "iter x\n";
                     ++iter_x;
-//                    std::cout << "set y\n";
                     *iter_y = y_coord;
-//                    std::cout << "iter y\n";
                     ++iter_y;
-//                    std::cout << "set z\n";
                     *iter_z = z_coord;
-//                    std::cout << "iter z\n";
                     ++iter_z;
                     ++n_iterations;
-
-//                    std::cout << x_coord << ", " << y_coord << ", " << z_coord << "\n";
-//                    std::cout << *points_msg;
-
                 }
             }
         }
-        std::cout << "return msg\n";
-        std::cout << n_iterations << "\n";
         return points_msg;
     }
 
