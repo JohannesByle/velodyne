@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
     double min_range = 0.0;
     double max_range = 120.0;
     data.setParameters(min_range, max_range, 0, 2 * M_PI);
-    data.setupOffline("/home/johannes/catkin_ws/src/velodyne/velodyne_pointcloud/params/VeloView-VLP-32C.yaml",
+    data.setupOffline("./src/velodyne/velodyne_pointcloud/params/VeloView-VLP-32C.yaml",
                       max_range, min_range);
     rosbag::Bag new_bag;
     new_bag.open(y, rosbag::bagmode::Write);
