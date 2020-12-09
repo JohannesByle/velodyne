@@ -493,6 +493,7 @@ namespace velodyne_rawdata {
         points_msg->header.frame_id = "velodyne";
         points_msg->height = 1; // if this is a "full 3D" pointcloud, height is 1; if this is Kinect-like pointcloud, height is the vertical resolution
         points_msg->width = BLOCKS_PER_PACKET * SCANS_PER_BLOCK;
+//      points_msg->width = 0;
         points_msg->is_bigendian = false;
         points_msg->is_dense = false; // there may be invalid points
 
@@ -503,7 +504,7 @@ namespace velodyne_rawdata {
         sensor_msgs::PointCloud2Iterator<float> iter_y(*points_msg, "y");
         sensor_msgs::PointCloud2Iterator<float> iter_z(*points_msg, "z");
 
-
+        int n_iterations = 0;
         for (int i = 0; i < BLOCKS_PER_PACKET; i++) {
 
             // upper bank lasers are numbered [0..31]
@@ -640,7 +641,7 @@ namespace velodyne_rawdata {
                                                                         SQR(1 - static_cast<float>(tmp.uint) / 65535)));
                     intensity = (intensity < min_intensity) ? min_intensity : intensity;
                     intensity = (intensity > max_intensity) ? max_intensity : intensity;
-                    ++points_msg->width;
+
 //                    std::cout << "set x\n";
                     *iter_x = x_coord;
 //                    std::cout << "iter x\n";
@@ -653,6 +654,7 @@ namespace velodyne_rawdata {
                     *iter_z = z_coord;
 //                    std::cout << "iter z\n";
                     ++iter_z;
+                    ++n_iterations;
 
 //                    std::cout << x_coord << ", " << y_coord << ", " << z_coord << "\n";
 //                    std::cout << *points_msg;
@@ -661,6 +663,7 @@ namespace velodyne_rawdata {
             }
         }
         std::cout << "return msg\n";
+        std::cout << n_iterations << "\n";
         return points_msg;
     }
 
