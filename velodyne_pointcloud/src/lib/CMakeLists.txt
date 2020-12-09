@@ -6,3 +6,9 @@ install(TARGETS velodyne_rawdata
         RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
         ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+
+find_package(catkin REQUIRED COMPONENTS rosbag std_msgs roscpp sensor_msgs velodyne_msgs velodyne_pointcloud)
+
+include_directories(${catkin_INCLUDE_DIRS})
+add_executable(inquisitor inquisitor.cpp)
+target_link_libraries(inquisitor ${catkin_LIBRARIES})
