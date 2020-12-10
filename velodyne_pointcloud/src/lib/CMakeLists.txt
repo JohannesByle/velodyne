@@ -7,7 +7,7 @@ install(TARGETS velodyne_rawdata
         ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
 
-find_package(catkin REQUIRED COMPONENTS rosbag std_msgs roscpp sensor_msgs velodyne_msgs)
+find_package(catkin REQUIRED COMPONENTS rosbag std_msgs roscpp sensor_msgs velodyne_msgs velodyne_pointcloud)
 
 include_directories(${catkin_INCLUDE_DIRS})
 add_executable(inquisitor inquisitor.cpp)
