@@ -29,7 +29,7 @@
 
 #include <fstream>
 #include <math.h>
-
+#include <stdint.h>
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <angles/angles.h>
@@ -493,16 +493,19 @@ namespace velodyne_rawdata {
         points_msg->header.frame_id = "velodyne";
         points_msg->height = 1; // if this is a "full 3D" pointcloud, height is 1; if this is Kinect-like pointcloud, height is the vertical resolution
         points_msg->width = BLOCKS_PER_PACKET * SCANS_PER_BLOCK;
-//      points_msg->width = 0;
         points_msg->is_bigendian = false;
         points_msg->is_dense = false; // there may be invalid points
 
         sensor_msgs::PointCloud2Modifier pcd_modifier(*points_msg);
 // this call also resizes the data structure according to the given width, height and fields
-        pcd_modifier.setPointCloud2FieldsByString(1, "xyz");
+        pcd_modifier.setPointCloud2Fields(4, "x", 1, sensor_msgs::PointField::FLOAT32,
+                                          "y", 1, sensor_msgs::PointField::FLOAT32,
+                                          "z", 1, sensor_msgs::PointField::FLOAT32,
+                                          "intensity", 1, sensor_msgs::PointField::FLOAT32);
         sensor_msgs::PointCloud2Iterator<float> iter_x(*points_msg, "x");
         sensor_msgs::PointCloud2Iterator<float> iter_y(*points_msg, "y");
         sensor_msgs::PointCloud2Iterator<float> iter_z(*points_msg, "z");
+        sensor_msgs::PointCloud2Iterator<float> iter_i (*points_msg, "intensity");
 
         int n_iterations = 0;
         for (int i = 0; i < BLOCKS_PER_PACKET; i++) {
@@ -542,6 +545,11 @@ namespace velodyne_rawdata {
 
                     if (timing_offsets.size()) {
                         time = timing_offsets[i][j] + time_diff_start_to_this_packet;
+                    }
+
+                    if (tmp.uint == 0) // no valid laser beam return
+                    {
+                        continue;
                     }
 
                     float distance = tmp.uint * calibration_.distance_resolution_m;
@@ -641,14 +649,14 @@ namespace velodyne_rawdata {
                                                                         SQR(1 - static_cast<float>(tmp.uint) / 65535)));
                     intensity = (intensity < min_intensity) ? min_intensity : intensity;
                     intensity = (intensity > max_intensity) ? max_intensity : intensity;
-
                     *iter_x = x_coord;
                     ++iter_x;
                     *iter_y = y_coord;
                     ++iter_y;
                     *iter_z = z_coord;
                     ++iter_z;
-                    ++n_iterations;
+                    *iter_i = intensity;
+                    ++iter_i;
                 }
             }
         }
