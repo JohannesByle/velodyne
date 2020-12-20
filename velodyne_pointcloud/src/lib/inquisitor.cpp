@@ -33,6 +33,9 @@ int main(int argc, char **argv) {
     bag.open(x, rosbag::bagmode::Read);
     boost::shared_ptr <velodyne_rawdata::DataContainerBase> container_ptr;
     rosbag::View view(bag);
+    int nth_msg = 0;
+    int prev_percentage = 0;
+    int percentage = 0;
     foreach(rosbag::MessageInstance
     const m, view)
     {
@@ -46,8 +49,15 @@ int main(int argc, char **argv) {
         if (r != NULL) {
             new_bag.write("/gx5/imu/data", r->header.stamp, *r);
         }
+        ++ nth_msg;
+        percentage = (100 * nth_msg) / view.size();
+        if (percentage != prev_percentage) {
+            std::cout << "Percentage of msgs processed: "<< percentage << "%\n";
+            prev_percentage = percentage;
+        }
+
 
     }
-    std::cout << "completely done";
+    std::cout << "Saving bag\n";
     bag.close();
 }
